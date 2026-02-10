@@ -1,0 +1,91 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import type { Product } from "../@types";
+import productService from "../services";
+import style from "./ProductDetail.module.css";
+import { formatter } from "../utils/formatteRegex";
+import { currencyFormatter } from "../utils/currencyFormatter";
+import { useDispatch } from "react-redux";
+import { addElement } from "../app/core/slice/cartSlice";
+import type { AppDispatch } from "../app/core/redux/store";
+
+const ProductDetail = () => {
+  const { id } = useParams<{ id: string }>();
+  const [product, setProduct] = useState<Product | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchItem = async () => {
+      const response = await productService.getById(id);
+      setProduct(response);
+    };
+
+    fetchItem();
+  }, [id]);
+
+  if (!product) {
+    return <p style={{ color: "white" }}>Loading...</p>;
+  }
+
+  return (
+    <div className={style.container}>
+      <figure className={style.media}>
+        <img
+          className={style.image}
+          src={product.pictures[0].url}
+          alt={product.name}
+          loading="lazy"
+        />
+      </figure>
+
+      <section className={style.details}>
+        <header className={style.header}>
+          <h1 className={style.title}>{product.name}</h1>
+        </header>
+
+        <article
+          className={style.description}
+          dangerouslySetInnerHTML={{
+            __html: formatter(product.description),
+          }}
+        />
+        <aside
+          style={{
+            color: "#000",
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            marginTop: "1rem",
+            fontWeight: "600",
+          }}
+        >
+          <span>Stock: {product.stock}</span>
+          <span className={style.price}>
+            {currencyFormatter(product.price)}
+          </span>
+        </aside>
+        <div className={style.actions}>
+          <button
+            className={style.primary}
+            onClick={() => {
+              dispatch(
+                addElement({
+                  id: product.id,
+                  picture: product.pictures[0],
+                  name: product.name,
+                  price: product.price,
+                }),
+              );
+            }}
+          >
+            Agregar al carrito
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default ProductDetail;

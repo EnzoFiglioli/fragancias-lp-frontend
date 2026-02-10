@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import styles from "./styles/Header.module.css";
+import styles from "./Header.module.css";
 
 export const Header = () => {
   const location = useLocation();
@@ -9,7 +9,7 @@ export const Header = () => {
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 50); // ajustá el valor
+      setScrolled(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", onScroll);
@@ -33,6 +33,7 @@ export const Header = () => {
         <ul className={styles.nav__links}>
           <li><Link to="/">Inicio</Link></li>
           <li><Link to="/products">Productos</Link></li>
+          <li><Link to="/cart">Carrito</Link></li>
           <li><Link to="/login">Iniciar Sesión</Link></li>
         </ul>
       </nav>
