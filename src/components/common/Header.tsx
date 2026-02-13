@@ -9,7 +9,6 @@ export const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Detect scroll
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -19,12 +18,10 @@ export const Header = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Bloquear scroll del body
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
   }, [isOpen]);
 
-  // Cerrar con ESC
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -41,6 +38,8 @@ export const Header = () => {
 
   const closeMenu = () => setIsOpen(false);
 
+  const user = false;
+
   return (
     <>
       <header className={headerClass}>
@@ -51,7 +50,7 @@ export const Header = () => {
             <li><Link to="/">Inicio</Link></li>
             <li><Link to="/products">Productos</Link></li>
             <li><Link to="/cart">Carrito</Link></li>
-            <li><Link to="/login">Iniciar Sesión</Link></li>
+            {user && <li><Link to="/login">Iniciar Sesión</Link></li>}
           </ul>
         </nav>
 

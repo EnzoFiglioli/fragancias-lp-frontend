@@ -1,7 +1,9 @@
 import styles from "./Footer.module.css";
 import { Link } from "react-router-dom";
 
+
 export const Footer = () => {
+const user = false;
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
@@ -19,7 +21,9 @@ export const Footer = () => {
             <li><Link to="/products">Productos</Link></li>
             <li><Link to="/categories">Categorías</Link></li>
             <li><Link to="/cart">Carrito</Link></li>
-            <li><Link to="/create">Agregar</Link></li>
+            {
+              user && <li><Link to="/create">Agregar</Link></li>
+            }
           </ul>
         </section>
 
