@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../app/core/redux/store";
 
 import { handlerSum } from "../utils/handlers/handlerSum";
@@ -6,15 +6,20 @@ import { currencyFormatter } from "../utils/currencyFormatter";
 import { whatsappUrl } from "../utils/handlers/handlerWhatsapp";
 import type { ProductCart } from "../@types";
 
-import whatsapp from "../../public/WhatsApp.svg.webp";
+import whatsapp from "/WhatsApp.svg.webp";
+import { useState } from "react";
+import { updateAmount } from "../app/core/slice/cartSlice";
+import { motion } from "framer-motion";
 
-const phone = "5492284650777";
+const phone = "";
 
 const CartPage = () => {
   const cartList = useSelector((state: RootState) => state.cart);
+  const [disabled] = useState(true);
+  const dispatch = useDispatch();
 
   const total = handlerSum(
-    ...cartList.map((item: ProductCart) => item.price * item.amount)
+    ...cartList.map((item: ProductCart) => item.price * item.amount),
   );
 
   const message = (() => {
@@ -24,9 +29,7 @@ const CartPage = () => {
     msg += cartList
       .map(
         (item: ProductCart) =>
-          `• ${item.name} x${item.amount} - ${currencyFormatter(
-            item.price
-          )}`
+          `• ${item.name} x${item.amount} - ${currencyFormatter(item.price)}`,
       )
       .join("\n");
 
@@ -45,7 +48,12 @@ const CartPage = () => {
   }
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+    >
       <h2>Carrito</h2>
 
       <section>
@@ -65,16 +73,29 @@ const CartPage = () => {
               style={{ width: "50px", height: "50px" }}
             />
 
-            <p style={{ flex: 1, marginLeft: "10px" }}>
-              {item.name}
-            </p>
+            <p style={{ flex: 1, marginLeft: "10px" }}>{item.name}</p>
 
             <p>{currencyFormatter(item.price)}</p>
 
             <div>
-              <button>-</button>
+              <button
+                style={{
+                  opacity: item.amount > 0 ? "1" : "0.5",
+                }}
+                onClick={() =>
+                  dispatch(updateAmount({ id: item.id, type: "DECREASE" }))
+                }
+              >
+                -
+              </button>
               <span style={{ margin: "0 10px" }}>{item.amount}</span>
-              <button>+</button>
+              <button
+                onClick={() =>
+                  dispatch(updateAmount({ id: item.id, type: "INCREASE" }))
+                }
+              >
+                +
+              </button>
             </div>
           </article>
         ))}
@@ -92,7 +113,9 @@ const CartPage = () => {
           <span>{currencyFormatter(total)}</span>
 
           <button
+            disabled
             style={{
+              opacity: disabled ? "0.3" : "1",
               backgroundColor: "#26ac53",
               color: "#fff",
               display: "flex",
@@ -103,21 +126,14 @@ const CartPage = () => {
               border: "none",
               cursor: "pointer",
             }}
-            onClick={() =>
-              window.open(whatsappUrl(phone, message), "_blank")
-            }
+            onClick={() => window.open(whatsappUrl(phone, message), "_blank")}
           >
-            <img
-              src={whatsapp}
-              alt="WhatsApp"
-              width={20}
-              height={20}
-            />
+            <img src={whatsapp} alt="WhatsApp" width={20} height={20} />
             Encargar por WhatsApp
           </button>
         </h4>
       </section>
-    </div>
+    </motion.div>
   );
 };
 

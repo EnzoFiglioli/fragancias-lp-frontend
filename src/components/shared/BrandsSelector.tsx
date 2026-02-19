@@ -10,7 +10,7 @@ const BrandsSelector = ({ sectionTitle }: { sectionTitle: string }) => {
       <div className={styles.brandsContainer}>
         {brands.map((brand, ix) => (
           <Link to={`/products/brand/${brand.name}`} key={ix} className={styles.brandCard}>
-            <img src={brand.picture[0]} alt={`${brand.name}-logo`} />
+            <img src={brand.picture[0]} alt={`${brand.name}-logo`} style={{objectFit:"cover"}} />
           </Link>
         ))}
       </div>

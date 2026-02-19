@@ -14,14 +14,13 @@ export const Index = () => {
     staleTime: 1000 * 60 * 5,
   });
 
-  if (isLoading) return <p>Cargando productos...</p>;
-  if (isError) return <p>Error al traer productos</p>;
-
   return (
     <>
       <main className={styles.main}>
         <h1>Fragancias que definen tu estilo</h1>
-        <p style={{color:"#dfdfdf"}}>Perfumes, desodorantes y aromas premium para cada momento</p>
+        <p style={{ color: "#dfdfdf" }}>
+          Perfumes, desodorantes y aromas premium para cada momento
+        </p>
         <button className={styles.cta}>
           <Link to={"/products"}>Ver productos</Link>
         </button>
@@ -31,10 +30,15 @@ export const Index = () => {
         <CategoryCarousel categories={categories} />
       </section>
       <section>
-        <ProductList
-          title="Encontra tu regalo hasta con un 20% OFF"
-          products={data ?? []}
-        />
+        {isLoading ? (
+          <p>Espere un momento mientras cargan los productos</p>
+        ) : (
+          <ProductList
+            title="Encontra tu regalo hasta con un 20% OFF"
+            products={data ?? []}
+          />
+        )}
+        {isError && <p>Lo sentimos hubo un error al traer los productos :(</p>}
       </section>
       <section className={styles.brandsSection}>
         <BrandsSelector sectionTitle={"Trabajamos con las siguientes marcas"} />

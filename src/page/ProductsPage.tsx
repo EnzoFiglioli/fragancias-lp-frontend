@@ -8,6 +8,7 @@ import ProductList from "../components/ProductList";
 import { useQuery } from "@tanstack/react-query";
 import BrandsSelector from "../components/shared/BrandsSelector";
 import { useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const ProductsPage = () => {
   // const [category, setCategory] = useState("all");
@@ -15,10 +16,9 @@ const ProductsPage = () => {
   const [searchParams] = useSearchParams();
   const category = searchParams?.get("category") || undefined;
 
-  console.log(searchParams.get("category"));
   const { isLoading, isError, data } = useQuery({
     queryKey: ["products"],
-    queryFn: async () => await getAllProducts({category}),
+    queryFn: async () => await getAllProducts({ category }),
   });
 
   //const { filterByCategory, sortItems } = useFilter();
@@ -34,7 +34,13 @@ const ProductsPage = () => {
   if (isError) return <p>Error al cargar productos :/</p>;
 
   return (
-    <div style={{ marginTop: "100px" }}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+      style={{ marginTop: "100px" }}
+    >
       {/*<Filters
         category={category}
         sort={sort}
@@ -43,7 +49,7 @@ const ProductsPage = () => {
       />*/}
       <BrandsSelector sectionTitle="" />
       <ProductListComponent title={"Nuestros productos"} products={data} />
-    </div>
+    </motion.div>
   );
 };
 

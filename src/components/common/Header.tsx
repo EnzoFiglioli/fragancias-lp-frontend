@@ -43,14 +43,39 @@ export const Header = () => {
   return (
     <>
       <header className={headerClass}>
-        <img src={logo} width={80} alt="logo" />
+        <Link to={"/"}>
+          <img src={logo} width={80} alt="logo" />
+        </Link>
 
         <nav className={styles.nav}>
           <ul className={styles.nav__links}>
-            <li><Link to="/">Inicio</Link></li>
-            <li><Link to="/products">Productos</Link></li>
-            <li><Link to="/cart">Carrito</Link></li>
-            {user && <li><Link to="/login">Iniciar Sesión</Link></li>}
+            <li>
+              <i
+                className="fa-solid fa-house"
+                style={{ color: "white", margin: "0px 5px" }}
+              ></i>
+
+              <Link to="/">Inicio</Link>
+            </li>
+            <li>
+              <i
+                className="fa-solid fa-tags"
+                style={{ color: "white", margin: "0px 5px" }}
+              ></i>
+              <Link to="/products">Productos</Link>
+            </li>
+            <li>
+              <i
+                className="fa-solid fa-cart-shopping"
+                style={{ color: "white", margin: "0px 5px" }}
+              ></i>
+              <Link to="/cart">Carrito</Link>
+            </li>
+            {user && (
+              <li>
+                <Link to="/login">Iniciar Sesión</Link>
+              </li>
+            )}
           </ul>
         </nav>
 
@@ -66,19 +91,31 @@ export const Header = () => {
       </header>
 
       {/* Overlay */}
-      {isOpen && (
-        <div className={styles.overlay} onClick={closeMenu} />
-      )}
+      {isOpen && <div className={styles.overlay} onClick={closeMenu} />}
 
       {/* Mobile Menu */}
-      <aside
-        className={`${styles.mobileMenu} ${isOpen ? styles.open : ""}`}
-      >
+      <aside className={`${styles.mobileMenu} ${isOpen ? styles.open : ""}`}>
         <ul>
-          <li><Link to="/" onClick={closeMenu}>Inicio</Link></li>
-          <li><Link to="/products" onClick={closeMenu}>Productos</Link></li>
-          <li><Link to="/cart" onClick={closeMenu}>Carrito</Link></li>
-          <li><Link to="/login" onClick={closeMenu}>Iniciar Sesión</Link></li>
+          <li>
+            
+              <i className="fa-solid fa-house" style={{ color: "white" }}></i>
+            <Link to="/" onClick={closeMenu}>
+              Inicio
+            </Link>
+          </li>
+          <li>
+            <i className="fa-solid fa-tags" style={{color:"white", margin:'0px 5px'}}></i>
+
+            <Link to="/products" onClick={closeMenu}>
+              Productos
+            </Link>
+          </li>
+          <li>
+            <i className="fa-solid fa-cart-shopping" style={{color:"white", margin:'0px 5px'}}></i>
+            <Link to="/cart" onClick={closeMenu}>
+              Carrito
+            </Link>
+          </li>
         </ul>
       </aside>
     </>

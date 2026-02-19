@@ -9,29 +9,39 @@ import { useDispatch } from "react-redux";
 import { addElement } from "../app/core/slice/cartSlice";
 import type { AppDispatch } from "../app/core/redux/store";
 import Breadcrumb from "./shared/BreadCumb";
+import { motion } from "framer-motion";
+import Modal from "./common/Modal";
 
 const ProductDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, slug } = useParams<{ id: string; slug: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!id) return;
+  if (!id) return;
 
-    const fetchItem = async () => {
-      const response = await productService.getById(id);
-      setProduct(response);
-    };
+  const fetchItem = async () => {
+    const response = await productService.getById(id);
+    setProduct(response);
+    document.title = `${response.name} | FraganciasLP`;
+  };
 
-    fetchItem();
-  }, [id]);
+  fetchItem();
+}, [id]);
 
   if (!product) {
     return <p style={{ color: "white" }}>Loading...</p>;
   }
 
   return (
-    <div style={{ marginTop: "100px" }}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      style={{ marginTop: "100px" }}
+    >
       <Breadcrumb category={product.category.categoryName} />
       <div className={style.container}>
         <figure className={style.media}>
@@ -73,6 +83,7 @@ const ProductDetail = () => {
             <button
               className={style.primary}
               onClick={() => {
+                setOpen(true);
                 dispatch(
                   addElement({
                     id: product.id,
@@ -87,7 +98,7 @@ const ProductDetail = () => {
                     count: 0,
                     category: "",
                     pictures: [],
-                    stock: 0
+                    stock: 0,
                   }),
                 );
               }}
@@ -95,9 +106,54 @@ const ProductDetail = () => {
               Agregar al carrito
             </button>
           </div>
+          <Modal isOpen={open} onClose={() => setOpen(false)}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "1rem",
+                textAlign: "center",
+              }}
+            >
+              <h2 style={{ margin: 0 }}>Producto agregado</h2>
+
+              <img
+                src={product.pictures?.[0]?.url}
+                alt={product.name}
+                style={{
+                  width: "120px",
+                  height: "120px",
+                  objectFit: "cover",
+                  borderRadius: "12px",
+                }}
+              />
+
+              <h3 style={{ margin: 0 }}>{product.name}</h3>
+
+              <p style={{ fontWeight: 600, margin: 0 }}>
+                {currencyFormatter(product.price)}
+              </p>
+
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  marginTop: "1rem",
+                  padding: "0.6rem 1.2rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  backgroundColor: "#111",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                Continuar comprando
+              </button>
+            </div>
+          </Modal>
         </section>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

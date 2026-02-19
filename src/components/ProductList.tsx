@@ -1,6 +1,7 @@
 import type { Product } from "../@types";
 import styles from "../page/Products.module.css";
 import { Link } from "react-router-dom";
+import { createSlug } from "../utils/handlers/createSlug";
 
 type Props = {
   products: Product[];
@@ -8,7 +9,7 @@ type Props = {
 };
 
 const ProductList = ({ products, title }: Props) => {
-  if (products.length === 0) {
+  if (products.length === 0 || products === null || products === undefined) {
     return (
       <section>
         <h2>
@@ -25,7 +26,7 @@ const ProductList = ({ products, title }: Props) => {
           <article key={product.id} className={styles.card}>
             <Link
               className={styles.button}
-              to={`/products/${product.id}`}
+              to={`/products/${product.id}/${createSlug(product.name)}`}
               style={{ background: "transparent" }}
             >
               <picture className={styles.picture}>
