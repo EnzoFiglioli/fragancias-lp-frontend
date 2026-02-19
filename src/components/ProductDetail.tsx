@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 import Modal from "./common/Modal";
 
 const ProductDetail = () => {
-  const { id, slug } = useParams<{ id: string; slug: string }>();
+  const { id } = useParams<{ id: string; slug: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
@@ -103,6 +103,7 @@ const ProductDetail = () => {
                 );
               }}
             >
+              <i className="fa-solid fa-cart-plus" style={{margin:"0px 5px"}}></i>
               Agregar al carrito
             </button>
           </div>
